@@ -1,4 +1,5 @@
 require 'responsys/responsys_api'
 require 'responsys/configuration'
 require 'responsys/helper'
+require 'responsys/member'
 require 'savon/savon_api'
