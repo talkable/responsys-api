@@ -22,7 +22,7 @@ class ResponsysApi
 
   def api_method(action, message = nil)
     response = client.run_with_credentials(action, message, jsession_id, header)
-    ResponsysApi::Helper.format_response(response, action)
+    ResponsysApi::ResponseHelper.format_response(response, action)
   end
 
   private
