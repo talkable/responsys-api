@@ -11,7 +11,9 @@ class ResponsysApi
       @settings = {
         username: APP_CONFIG["username"],
         password: APP_CONFIG["password"],
-        wsdl: APP_CONFIG["wsdl"]
+        wsdl: APP_CONFIG["wsdl"],
+        master_folder: APP_CONFIG["master_folder"],
+        master_list: APP_CONFIG["master_list"]
       }
     end
   end

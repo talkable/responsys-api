@@ -5,24 +5,26 @@ class Member
   include RequestBuilder
   include RequestSchema
 
-  attr_reader :email
+  attr_reader :email, :master_folder, :master_list
   attr_accessor :connection
 
   def initialize(email)
     @email = email
     @connection = ResponsysApi.new
+    @master_folder = connection.master[:folder]
+    @master_list = connection.master[:list]
   end
 
-  def subscribed?(folder, object)
+  def subscribed?(folder=master_folder, object=master_list)
     response = retrieve_information_by_email(folder, object, "EMAIL_PERMISSION_STATUS_")
     response[:record_data][:records][:field_values] == "I"
   end
 
-  def unsubscribe(folder, object)
+  def unsubscribe(folder=master_folder, object=master_list)
    subscription_call(folder, object, true)
   end
 
-  def subscribe(folder, object)
+  def subscribe(folder=master_folder, object=master_list)
    subscription_call(folder, object, false)
   end
 
