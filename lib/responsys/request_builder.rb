@@ -7,6 +7,8 @@ module RequestBuilder
 
   private
 
+  # Schema expected to be a hash (can have nested hashes)
+  # Transforms into appropriate XML for Savon message
   def build_xml_from_schema(schema, builder)
     return unless schema.is_a?(Hash)
     schema.each do |key,value|

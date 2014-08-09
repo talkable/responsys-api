@@ -28,9 +28,13 @@ class Member
    subscription_call(folder, object, false)
   end
 
+  def add_member(folder=master_folder, object=master_list)
+    subscription_call(folder, object, false, true)
+  end
+
   private
 
-  # use args to specify user information you'd like to retrieve
+  # Use args to specify which columns of user data you'd like to retrieve
   def retrieve_information_by_email(folder, object, *args)
     schema = retrieve_information_by_email_schema(folder, object, *args)
     message = build(schema)
@@ -38,8 +42,8 @@ class Member
     connection.api_method("retrieve_list_members", message)
   end
 
-  def subscription_call(folder, object, subscription_status)
-   schema = subscription_schema(folder, object, subscription_status)
+  def subscription_call(folder, object, subscription_status, insert=false)
+   schema = subscription_schema(folder, object, subscription_status, insert)
    message = build(schema)
 
    connection.api_method("merge_list_members_riid", message)

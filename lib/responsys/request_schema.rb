@@ -14,7 +14,7 @@ module RequestSchema
     schema
   end
 
-  def subscription_schema(folder, object, subscription_status)
+  def subscription_schema(folder, object, subscription_status, insert)
     subscription_field_value = subscription_status ? "O" : "I"
 
     schema = {}
@@ -28,7 +28,7 @@ module RequestSchema
     schema[:recordData][:records]["#{email}"] = "fieldValues"
     schema[:recordData][:records]["#{subscription_field_value}"] = "fieldValues"
     schema[:mergeRule] = {}
-    schema[:mergeRule][:insertOnNoMatch] = ""
+    schema[:mergeRule][:insertOnNoMatch] = insert
     schema[:mergeRule][:updateOnMatch] = "REPLACE_ALL"
     schema[:mergeRule][:matchColumnName1] = "EMAIL_ADDRESS_"
     schema[:mergeRule][:matchColumnName2] = ""
