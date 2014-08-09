@@ -13,6 +13,8 @@ class Member
   end
 
   def unsubscribe
+   message = ResponsysApi::RequestHelper.build_unsubscribe_message(email, folder, object)
+   connection.api_method("merge_list_members_riid", message)
   end
 
   # use args to specify user information you'd like to retrieve
