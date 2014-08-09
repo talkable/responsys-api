@@ -15,7 +15,7 @@ module RequestBuilder
           build_xml_from_schema(value, builder)
         end
       else
-        if value == "fieldList"
+        if %w(fieldList fieldNames fieldValues).include? value
           builder.tns value.to_sym, key.to_s
         else
           builder.tns key, value

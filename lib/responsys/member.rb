@@ -18,10 +18,15 @@ class Member
     response[:record_data][:records][:field_values] == "I"
   end
 
-  def unsubscribe
-   message = ResponsysApi::RequestHelper.build_unsubscribe_message(email, folder, object)
-   connection.api_method("merge_list_members_riid", message)
+  def unsubscribe(folder, object)
+   subscription_call(folder, object, true)
   end
+
+  def subscribe(folder, object)
+   subscription_call(folder, object, false)
+  end
+
+  private
 
   # use args to specify user information you'd like to retrieve
   def retrieve_information_by_email(folder, object, *args)
@@ -29,5 +34,12 @@ class Member
     message = build(schema)
 
     connection.api_method("retrieve_list_members", message)
+  end
+
+  def subscription_call(folder, object, subscription_status)
+   schema = subscription_schema(folder, object, subscription_status)
+   message = build(schema)
+
+   connection.api_method("merge_list_members_riid", message)
   end
 end
