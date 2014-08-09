@@ -1,4 +1,10 @@
+require "#{Dir.pwd}/lib/responsys/request_builder"
+require "#{Dir.pwd}/lib/responsys/request_schema"
+
 class Member
+  include RequestBuilder
+  include RequestSchema
+
   attr_reader :email
   attr_accessor :connection
 
@@ -19,7 +25,9 @@ class Member
 
   # use args to specify user information you'd like to retrieve
   def retrieve_information_by_email(folder, object, *args)
-    message = ResponsysApi::RequestHelper.build_retrieve_message(email, folder, object, *args)
+    schema = retrieve_information_by_email_schema(folder, object, *args)
+    message = build(schema)
+
     connection.api_method("retrieve_list_members", message)
   end
 end
