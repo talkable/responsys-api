@@ -1,9 +1,9 @@
 require 'spec_helper.rb'
 
 describe ResponsysApi do
-  describe ResponseHelper do
+  describe ResponsysApi::ResponseHelper do
   end
 
-  desribe RequestHelper do
+  describe ResponsysApi::RequestHelper do
   end
 end
