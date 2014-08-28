@@ -3,18 +3,19 @@ require "savon"
 require "responsys/helper"
 require "responsys/api/all"
 require "responsys/api/object/all"
-require "singleton"
 
 module Responsys
   module Api
     class Client
-      include Singleton
       include Responsys::Api::All
 
       attr_accessor :credentials, :client, :session_id, :jsession_id, :header
 
-      def initialize
-        settings = Responsys.configuration.settings
+      def self.instance
+        @@instance ||= new(Responsys.configuration.settings)
+      end
+
+      def initialize(settings)
         @credentials = {
           username: settings[:username],
           password: settings[:password]
