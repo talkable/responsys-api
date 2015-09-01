@@ -95,4 +95,20 @@ describe Responsys::Api::Client do
       end
     end
   end
+
+  context "Savon client options" do
+    it "accpets additional options" do
+      allow_any_instance_of(Responsys::Api::Client).to receive(:login).and_return(nil)
+
+      client = Responsys::Api::Client.new(
+          username: "your_responsys_username",
+          password: "your_responsys_password",
+          wsdl: "https://wsxxxx.responsys.net/webservices/wsdl/ResponsysWS_Level1.wsdl",
+          debug: false,
+          read_timeout: 5
+        )
+
+      expect(client.instance_variable_get(:@client).globals[:read_timeout]).to eq(5)
+    end
+  end
 end

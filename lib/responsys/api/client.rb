@@ -11,21 +11,30 @@ module Responsys
 
       attr_accessor :credentials, :client, :session_id, :jsession_id, :header
 
+      AVAILABLE_SETTINGS = %i{wsdl endpoint namespace raise_errors proxy headers open_timeout read_timeout
+                              ssl_verify_mode ssl_version ssl_cert_file ssl_cert_key_file ssl_ca_cert_file ssl_cert_key_password
+                              convert_request_keys_to soap_header element_form_default env_namespace namespace_identifier namespaces
+                              encoding soap_version basic_auth digest_auth wsse_auth wsse_timestamp ntlm strip_namespaces
+                              convert_response_tags_to logger log_level log filters pretty_print_xml}
+
       def self.instance
         @@instance ||= new(Responsys.configuration.settings)
       end
 
       def initialize(settings)
+        settings = settings.dup
+        settings[:element_form_default] = :qualified
+
         @credentials = {
           username: settings[:username],
           password: settings[:password]
         }
 
         if settings[:debug]
-          @client = Savon.client(wsdl: settings[:wsdl], element_form_default: :qualified, log_level: :debug, log: true, pretty_print_xml: true)
-        else
-          @client = Savon.client(wsdl: settings[:wsdl], element_form_default: :qualified)
+          settings.merge(log_level: :debug, log: true, pretty_print_xml: true)
         end
+
+        @client = Savon.client(filter_settings settings)
 
         login
       end
@@ -65,6 +74,11 @@ module Responsys
 
       def run_with_credentials(method, message, cookie, header)
         @client.call(method.to_sym, message: message, cookies: cookie, soap_header: header)
+      end
+
+      def filter_settings(settings)
+        settings[:ssl_version] = :TLSv1 unless settings[:ssl_version]
+        settings.select { |k,v| k.to_sym != :username && k.to_sym != :password && AVAILABLE_SETTINGS.include?(k.to_sym) }
       end
     end
   end
