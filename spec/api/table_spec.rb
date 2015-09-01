@@ -16,10 +16,8 @@ describe Responsys::Api::Table do
   end
 
   context "create table" do
-    before(:all) do
-      @table = Responsys::Api::Object::InteractObject.new("another_test_folder", "table_#{Time.now.to_i}")
-      @table_with_pk = Responsys::Api::Object::InteractObject.new("another_test_folder", "table_with_pk_#{Time.now.to_i}")
-    end
+    let(:table) { Responsys::Api::Object::InteractObject.new("another_test_folder", "table_#{Time.now.to_i}") }
+    let(:table_with_pk) { Responsys::Api::Object::InteractObject.new("another_test_folder", "table_with_pk_#{Time.now.to_i}") }
 
     it "should create a table" do
       VCR.use_cassette("api/table/create") do
@@ -28,7 +26,7 @@ describe Responsys::Api::Table do
           Responsys::Api::Object::Field.new("field2", Responsys::Api::Object::FieldType.new("NUMBER"), custom = false, data_extraction_key = false),
           Responsys::Api::Object::Field.new("field3", Responsys::Api::Object::FieldType.new("TIMESTAMP"), custom = false, data_extraction_key = false),
         ]
-        response = Responsys::Api::Client.instance.create_table(@table, fields)
+        response = Responsys::Api::Client.instance.create_table(table, fields)
 
         expect(response[:result]).to be(true)
       end
@@ -36,7 +34,7 @@ describe Responsys::Api::Table do
 
     it "should delete the previous table" do
       VCR.use_cassette("api/table/delete") do
-        response = Responsys::Api::Client.instance.delete_table(@table)
+        response = Responsys::Api::Client.instance.delete_table(table)
 
         expect(response[:result]).to be(true)
       end
@@ -49,7 +47,7 @@ describe Responsys::Api::Table do
           Responsys::Api::Object::Field.new("field2", Responsys::Api::Object::FieldType.new("NUMBER"), custom = false, data_extraction_key = false),
           Responsys::Api::Object::Field.new("field3", Responsys::Api::Object::FieldType.new("TIMESTAMP"), custom = false, data_extraction_key = false),
         ]
-        response = Responsys::Api::Client.instance.create_table_with_pk(@table_with_pk, fields, %w(field1))
+        response = Responsys::Api::Client.instance.create_table_with_pk(table_with_pk, fields, %w(field1))
 
         expect(response[:result]).to be(true)
       end
@@ -57,7 +55,7 @@ describe Responsys::Api::Table do
 
     it "should delete the previous table with pk" do
       VCR.use_cassette("api/table/delete_with_pk") do
-        response = Responsys::Api::Client.instance.delete_table(@table_with_pk)
+        response = Responsys::Api::Client.instance.delete_table(table_with_pk)
 
         expect(response[:result]).to be(true)
       end
